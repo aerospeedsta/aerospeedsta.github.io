@@ -1,0 +1,52 @@
+{
+    "data": [
+        {
+            "type": "scatter3d",
+            "mode": "lines",
+            "x": [
+                0,
+                1,
+                0,
+                -1,
+                0
+            ],
+            "y": [
+                0,
+                0,
+                1,
+                0,
+                -1
+            ],
+            "z": [
+                0,
+                1,
+                0,
+                1,
+                0
+            ],
+            "line": {
+                "width": 6,
+                "color": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "colorscale": "Viridis"
+            }
+        }
+    ],
+    "layout": {
+        "title": "Sample 3D Plot (Placeholder)",
+        "autosize": true,
+        "width": null,
+        "height": null,
+        "margin": {
+            "l": 65,
+            "r": 50,
+            "b": 65,
+            "t": 90
+        }
+    }
+}

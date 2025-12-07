@@ -1,0 +1,20 @@
+baseURL: https://example.org/
+languageCode: en-us
+title: Bharath Srikanth
+theme: ["PaperMod"]
+
+params:
+  defaultTheme: auto
+  label:
+    text: "Aerospeedsta"
+  socialIcons:
+    - name: github
+      url: "https://www.github.com/aerospeedsta"
+    - name: orcid
+      url: "https://orcid.org/0009-0001-9252-3719"
+    - name: email
+      url: "mailto:contact@aerospeedsta.dev"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/bharsrik"
+
+# Force reload

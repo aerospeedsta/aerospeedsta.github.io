@@ -1,0 +1,59 @@
+{{ $id := .Get "json" | md5 }}
+<div id="plotly-{{ $id }}" style="height: {{ .Get " height" | default "600px" }}; width: 100%;"></div>
+
+<script>
+    (function () {
+        function initPlot() {
+            fetch("{{ .Get "json" }}")
+                .then(r => r.json())
+                .then(data => {
+                    // Sync with theme
+                    const computedStyle = getComputedStyle(document.body);
+                    const textColor = computedStyle.color;
+
+                    data.layout = data.layout || {};
+                    data.layout.paper_bgcolor = 'rgba(0,0,0,0)';
+                    data.layout.plot_bgcolor = 'rgba(0,0,0,0)';
+
+                    data.layout.font = data.layout.font || {};
+                    data.layout.font.color = textColor;
+
+                    // Also update axes colors to match text if not explicitly set
+                    if (!data.layout.xaxis) data.layout.xaxis = {};
+                    if (!data.layout.yaxis) data.layout.yaxis = {};
+                    if (!data.layout.scene) data.layout.scene = {};
+                    if (!data.layout.scene.xaxis) data.layout.scene.xaxis = {};
+                    if (!data.layout.scene.yaxis) data.layout.scene.yaxis = {};
+                    if (!data.layout.scene.zaxis) data.layout.scene.zaxis = {};
+
+                    const axisCommon = { color: textColor };
+                    Object.assign(data.layout.xaxis, axisCommon);
+                    Object.assign(data.layout.yaxis, axisCommon);
+                    Object.assign(data.layout.scene.xaxis, axisCommon);
+                    Object.assign(data.layout.scene.yaxis, axisCommon);
+                    Object.assign(data.layout.scene.zaxis, axisCommon);
+
+                    Plotly.newPlot('plotly-{{ $id }}', data.data, data.layout);
+                })
+                .catch(e => console.error("Error loading Plotly JSON:", e));
+        }
+
+        if (window.Plotly) {
+            initPlot();
+        } else {
+            if (!window.plotlyCallbacks) window.plotlyCallbacks = [];
+            window.plotlyCallbacks.push(initPlot);
+
+            if (!window.plotlyLoading) {
+                window.plotlyLoading = true;
+                var s = document.createElement('script');
+                s.src = 'https://cdn.plot.ly/plotly-2.27.0.min.js';
+                s.onload = function () {
+                    window.plotlyCallbacks.forEach(cb => cb());
+                    window.plotlyCallbacks = [];
+                };
+                document.head.appendChild(s);
+            }
+        }
+    })();
+</script>

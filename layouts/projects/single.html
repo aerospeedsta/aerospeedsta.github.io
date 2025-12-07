@@ -1,0 +1,77 @@
+{{- define "main" }}
+
+<article class="post-single">
+    <header class="post-header">
+        {{ partial "breadcrumbs.html" . }}
+        <h1 class="post-title entry-hint-parent">
+            {{ .Title }}
+        </h1>
+        {{- if .Description }}
+        <div class="post-description">
+            {{ .Description }}
+        </div>
+        {{- end }}
+        {{- if not (.Param "hideMeta") }}
+        <div class="post-meta">
+            {{- partial "post_meta.html" . -}}
+            {{- partial "edit_post.html" . -}}
+        </div>
+        {{- end }}
+        {{- if .Params.abstract }}
+        <div class="post-abstract"
+            style="margin: 20px 0; padding: 20px; background-color: var(--entry); border-left: 4px solid var(--primary); font-style: italic;">
+            <p style="margin: 0; font-weight: bold; font-style: normal; margin-bottom: 10px;">Abstract</p>
+            {{ .Params.abstract }}
+        </div>
+        {{- end }}
+    </header>
+
+    {{- if .Content }}
+    <div class="post-content">
+        {{- if not (.Param "disableAnchoredHeadings") }}
+        {{- partial "anchored_headings.html" .Content -}}
+        {{- else }}{{ .Content }}{{ end }}
+    </div>
+    {{- end }}
+
+    <footer class="post-footer">
+        {{- if (.Param "ShowPostNavLinks") }}
+        {{- partial "post_nav_links.html" . }}
+        {{- end }}
+        {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
+        {{- partial "share_icons.html" . -}}
+        {{- end }}
+    </footer>
+</article>
+
+<!-- Research Log Section -->
+<div class="research-log">
+    <h2 style="margin-top: 40px; margin-bottom: 20px;">Research Updates</h2>
+
+    {{- $projectId := .Params.project_id | default .File.ContentBaseName }}
+    {{- $pages := where site.RegularPages "Type" "posts" }}
+    {{- $projectPosts := where $pages "Params.project_id" $projectId }}
+
+    {{- range $projectPosts }}
+    <article class="post-entry">
+        <header class="entry-header">
+            <h2>
+                {{ .Title }}
+            </h2>
+        </header>
+        {{- if (ne (.Param "hideSummary") true) }}
+        <div class="entry-content">
+            <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+        </div>
+        {{- end }}
+        <footer class="entry-footer">
+            {{- partial "post_meta.html" . -}}
+        </footer>
+        <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+    </article>
+    {{- else }}
+    <p>No research updates found for this project.</p>
+    {{- end }}
+</div>
+
+{{- end }}

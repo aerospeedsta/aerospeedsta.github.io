@@ -1,0 +1,77 @@
+{{- define "main" }}
+
+<article class="first-entry client-home">
+    <!-- Hero Section -->
+    <header class="entry-header">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">
+            {{ site.Title }}
+        </h1>
+        <p style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 1.5rem;">
+            Independent Aerospace Researcher
+        </p>
+    </header>
+
+    <div class="entry-content">
+        <p>
+            Welcome to my research portfolio. I am an independent researcher focusing on advanced aerospace control
+            systems, specifically applying neural operators to Hamilton-Jacobi reachability analysis.
+        </p>
+        <p>
+            My goal is to bridge the gap between theoretical control theory and practical, real-time safety guarantees
+            for autonomous systems.
+        </p>
+    </div>
+
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" "socials") }}
+    </footer>
+</article>
+
+<!-- Active Research (Projects) Section -->
+<div class="home-section" style="margin-top: 50px;">
+    <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Active Research</h2>
+
+    {{- $projects := where site.RegularPages "Type" "projects" }}
+    {{- range $projects }}
+    <article class="post-entry">
+        <header class="entry-header">
+            <h2>{{ .Title }}</h2>
+        </header>
+        {{- if .Params.abstract }}
+        <div class="entry-content">
+            <p style="font-style: italic;">{{ .Params.abstract | truncate 200 }}</p>
+        </div>
+        {{- else if .Description }}
+        <div class="entry-content">
+            <p>{{ .Description }}</p>
+        </div>
+        {{- end }}
+        <a class="entry-link" aria-label="project link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+    </article>
+    {{- end }}
+</div>
+
+<!-- Recent Updates Section -->
+<div class="home-section" style="margin-top: 50px;">
+    <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Recent Updates</h2>
+
+    {{- $posts := where site.RegularPages "Type" "posts" }}
+    {{- range first 3 $posts }}
+    <article class="post-entry">
+        <header class="entry-header">
+            <h2>{{ .Title }}</h2>
+        </header>
+        <div class="entry-content">
+            <p>{{ .Summary | plainify | htmlUnescape | truncate 150 }}</p>
+        </div>
+        <div class="entry-footer">
+            <span title='{{ .Date.Format "2006-01-02 15:04:05 -0700 MST" }}'>
+                {{- .Date.Format "January 2, 2006" -}}
+            </span>
+        </div>
+        <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+    </article>
+    {{- end }}
+</div>
+
+{{- end }}
