@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "x": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "y": [
+                10,
+                15,
+                13,
+                17
+            ],
+            "mode": "markers",
+            "type": "scatter",
+            "marker": {
+                "size": 12
+            }
+        }
+    ],
+    "layout": {
+        "title": "Interactive Plotly Test",
+        "xaxis": {
+            "title": "X Axis"
+        },
+        "yaxis": {
+            "title": "Y Axis"
+        }
+    }
+}

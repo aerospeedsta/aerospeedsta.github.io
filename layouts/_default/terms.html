@@ -1,0 +1,89 @@
+{{- define "main" }}
+{{- if .Title }}
+<header class="page-header">
+    {{- partial "breadcrumbs.html" . }}
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+{{- end }}
+
+{{- $type := .Type }}
+{{- $allTags := site.Taxonomies.tags }}
+
+<div class="terms-container" style="padding: 20px 0;">
+
+    {{- /* 1. Iterate over Defined Groups */ -}}
+    {{- range $groupName, $groupConfig := site.Params.tagGroups }}
+    {{- if ne $groupName "General" }}
+    {{- $groupTags := slice }}
+
+    {{- /* Find tags matching this group */ -}}
+    {{- range $matcher := $groupConfig.match }}
+    {{- with index $allTags $matcher }}
+    {{- $groupTags = $groupTags | append (dict "Name" $matcher "Count" .Count "Permalink" (printf "/tags/%s/" ($matcher
+    | urlize))) }}
+    {{- end }}
+    {{- end }}
+
+    {{- /* Render Group Section if it has tags */ -}}
+    {{- if gt (len $groupTags) 0 }}
+    <div class="tag-group" style="margin-bottom: 40px;">
+        <h3
+            style="color: {{ $groupConfig.color }}; border-bottom: 2px solid {{ $groupConfig.color }}20; padding-bottom: 10px; margin-bottom: 20px;">
+            {{ $groupName }}
+        </h3>
+        <div class="terms-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
+            {{- range $groupTags }}
+            <a href="{{ .Permalink }}" class="tag-pill" style="--tag-color: {{ $groupConfig.color }};">
+                #{{ .Name }} <sup><strong>{{ .Count }}</strong></sup>
+            </a>
+            {{- end }}
+        </div>
+    </div>
+    {{- end }}
+    {{- end }}
+    {{- end }}
+
+    {{- /* 2. Render General/Other Tags */ -}}
+    {{- $generalConfig := index site.Params.tagGroups "General" }}
+    {{- $generalColor := $generalConfig.color | default "#9CA3AF" }}
+    {{- $generalTags := slice }}
+
+    {{- range $tagName, $tagData := $allTags }}
+    {{- /* Check if tag is in any group */ -}}
+    {{- $isGrouped := false }}
+    {{- range $groupName, $groupConfig := site.Params.tagGroups }}
+    {{- if and (ne $groupName "General") (in $groupConfig.match $tagName) }}
+    {{- $isGrouped = true }}
+    {{- end }}
+    {{- end }}
+
+    {{- if not $isGrouped }}
+    {{- $generalTags = $generalTags | append (dict "Name" $tagName "Count" $tagData.Count "Permalink" (printf
+    "/tags/%s/" ($tagName | urlize))) }}
+    {{- end }}
+    {{- end }}
+
+    {{- if gt (len $generalTags) 0 }}
+    <div class="tag-group" style="margin-bottom: 40px;">
+        <h3
+            style="color: {{ $generalColor }}; border-bottom: 2px solid {{ $generalColor }}20; padding-bottom: 10px; margin-bottom: 20px;">
+            General / Uncategorized
+        </h3>
+        <div class="terms-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
+            {{- range $generalTags }}
+            <a href="{{ .Permalink }}" class="tag-pill" style="--tag-color: {{ $generalColor }};">
+                #{{ .Name }} <sup><strong>{{ .Count }}</strong></sup>
+            </a>
+            {{- end }}
+        </div>
+    </div>
+    {{- end }}
+
+</div>
+
+{{- end }}{{/* end main */}}

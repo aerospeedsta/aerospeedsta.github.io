@@ -1,0 +1,12 @@
+{{- $tagName := . | lower -}}
+{{- $foundColor := "" -}}
+{{- range $groupName, $groupData := site.Params.tagGroups -}}
+{{- if in $groupData.match $tagName -}}
+{{- $foundColor = $groupData.color -}}
+{{- break -}}
+{{- end -}}
+{{- end -}}
+{{- if eq $foundColor "" -}}
+{{- $foundColor = site.Params.tagGroups.General.color | default "hsl(0, 0%, 50%)" -}}
+{{- end -}}
+{{- $foundColor -}}

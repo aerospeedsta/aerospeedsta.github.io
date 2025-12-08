@@ -1,0 +1,161 @@
+{{ define "main" }}
+<header class="page-header">
+    <h1>{{- (printf "%s&nbsp;" .Title ) | htmlUnescape -}}
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+    </h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+    {{- if not (.Param "hideMeta") }}
+    <div class="post-meta">
+        {{- partial "translation_list.html" . -}}
+    </div>
+    {{- end }}
+</header>
+
+<div id="searchbox">
+    <input id="searchInput" autofocus placeholder="{{ .Params.placeholder | default (printf " %s ↵" .Title) }}"
+        aria-label="search" type="search" autocomplete="off" maxlength="64">
+    <div id="search-results-container" style="margin-top: 20px;">
+        <!-- Categorized results will appear here -->
+    </div>
+</div>
+
+<style>
+    .tag-pill {
+        display: inline-block;
+        padding: 3px 10px;
+        margin-right: 5px;
+        margin-top: 5px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        border: 1px solid var(--tag-color);
+        color: var(--tag-color) !important;
+        background-color: color-mix(in srgb, var(--tag-color), transparent 90%);
+        cursor: pointer;
+    }
+
+    .tag-pill:hover {
+        background-color: color-mix(in srgb, var(--tag-color), transparent 80%);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<script>
+    (function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialQuery = urlParams.get('q');
+        const input = document.getElementById('searchInput');
+        const container = document.getElementById('search-results-container');
+
+        // Pre-fill input
+        if (initialQuery) {
+            input.value = initialQuery;
+        }
+
+        let fuse;
+        let dataLoaded = false;
+
+        function loadIndex() {
+            return fetch('/index.json?v=' + new Date().getTime())
+                .then(response => response.json())
+                .then(data => {
+                    fuse = new Fuse(data, {
+                        keys: ['title', 'summary', 'content', 'tags.name'],
+                        threshold: 0.4,
+                        ignoreLocation: true
+                    });
+                    dataLoaded = true;
+                })
+                .catch(err => console.error("Index load failed", err));
+        }
+
+        function executeSearch(query) {
+            if (!query) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const results = fuse.search(query);
+
+            if (results.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--secondary);">No results found.</p>';
+                return;
+            }
+
+            // Categorize
+            const projects = results.filter(r => r.item.section === 'Projects');
+            const blogs = results.filter(r => r.item.section === 'Blogs');
+            const others = results.filter(r => r.item.section !== 'Projects' && r.item.section !== 'Blogs');
+
+            let html = '';
+
+            const renderCard = (item) => {
+                let tagsHtml = '';
+                if (item.tags && item.tags.length > 0) {
+                    tagsHtml = '<div style="margin-top: 10px;">';
+                    item.tags.forEach(tag => {
+                        tagsHtml += `<a href="${tag.permalink}" class="tag-pill" style="--tag-color: ${tag.color};">#${tag.name}</a>`;
+                    });
+                    tagsHtml += '</div>';
+                }
+
+                return `
+                    <article class="post-entry" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border); border-radius: 12px; transition: transform 0.2s;">
+                        <header class="entry-header">
+                            <h2 style="font-size: 1.4rem; margin-bottom: 5px;">
+                                <a href="${item.permalink}">${item.title}</a>
+                            </h2>
+                        </header>
+                         <div class="entry-content" style="font-size: 0.95rem; color: var(--secondary);">
+                            <p>${item.summary ? item.summary.substring(0, 150) + '...' : ''}</p>
+                        </div>
+                        ${tagsHtml}
+                        <footer class="entry-footer" style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">
+                            ${new Date(item.date * 1000).toLocaleDateString()}
+                        </footer>
+                   </article>
+                `;
+            };
+
+            if (projects.length > 0) {
+                html += '<h2 style="margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">Projects</h2>';
+                projects.forEach(r => html += renderCard(r.item));
+            }
+
+            if (blogs.length > 0) {
+                html += '<h2 style="margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">Blogs</h2>';
+                blogs.forEach(r => html += renderCard(r.item));
+            }
+
+            if (others.length > 0) {
+                html += '<h2 style="margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">Other Pages</h2>';
+                others.forEach(r => html += renderCard(r.item));
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Initialize
+        loadIndex().then(() => {
+            if (initialQuery) executeSearch(initialQuery);
+        });
+
+        // Event Listener
+        input.addEventListener('input', (e) => {
+            if (dataLoaded) executeSearch(e.target.value);
+        });
+    })();
+</script>
+{{ end }}

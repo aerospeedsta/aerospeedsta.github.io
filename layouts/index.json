@@ -1,0 +1,15 @@
+{{- $.Scratch.Set "index" slice -}}
+{{- range .Site.RegularPages -}}
+  {{- $section := .Section -}}
+  {{- if eq $section "posts" -}}{{- $section = "Blogs" -}}{{- end -}}
+  {{- if eq $section "projects" -}}{{- $section = "Projects" -}}{{- end -}}
+  {{- $tags := slice -}}
+  {{- if .Params.tags -}}
+    {{- range (.GetTerms "tags") -}}
+      {{- $color := partial "functions/get_tag_color.html" .LinkTitle -}}
+      {{- $tags = $tags | append (dict "name" .LinkTitle "permalink" .Permalink "color" $color) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $.Scratch.Add "index" (dict "title" .Title "permalink" .Permalink "summary" .Summary "content" .Plain "section" $section "date" .Date.Unix "tags" $tags) -}}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}

@@ -114,40 +114,83 @@
     .entry-content {
         color: var(--secondary);
     }
+
+    /* Responsive Mobile Tweaks */
+    @media screen and (max-width: 768px) {
+        .nav {
+            flex-wrap: nowrap !important;
+            /* Force single row */
+            justify-content: space-between !important;
+            padding: 10px 5px !important;
+            /* Reduce side padding */
+        }
+
+        .logo {
+            flex-shrink: 1;
+            /* Allow logo to shrink if needed */
+        }
+
+        .logo a {
+            font-size: 18px !important;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            display: none !important;
+        }
+
+        .social-icons {
+            margin: 0 !important;
+            /* Remove auto margins */
+            gap: 8px !important;
+        }
+
+        #menu {
+            margin: 0 !important;
+        }
+    }
+
+    /* Small Mobile Fix (iPhone SE / 320px) */
+    @media screen and (max-width: 450px) {
+        .logo a {
+            font-size: 16px !important;
+        }
+
+        .social-icons svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        .logo-switches svg {
+            width: 18px !important;
+            height: 18px !important;
+        }
+
+        .nav {
+            gap: 5px !important;
+        }
+
+        .logo img {
+            height: 24px !important;
+            /* Smaller logo image */
+        }
+    }
 </style>
 <header class="header">
     <nav class="nav">
         <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) }}
             {{- if site.Title }}
-            <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)">
-                {{- if site.Params.label.icon }}
-                {{- $img := resources.Get site.Params.label.icon }}
-                {{- if $img }}
-                {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "bmp" "gif") -}}
-                {{- if hugo.IsExtended -}}
-                {{- $processableFormats = $processableFormats | append "webp" -}}
-                {{- end -}}
-                {{- $prod := (hugo.IsProduction | or (eq site.Params.env "production")) }}
-                {{- if and (in $processableFormats $img.MediaType.SubType) (eq $prod true)}}
-                {{- if site.Params.label.iconHeight }}
-                {{- $img = $img.Resize (printf "x%d" site.Params.label.iconHeight) }}
-                {{ else }}
-                {{- $img = $img.Resize "x30" }}
-                {{- end }}
-                {{- end }}
-                <img src="{{ $img.Permalink }}" alt="" aria-label="logo"
-                    height="{{- site.Params.label.iconHeight | default " 30" -}}">
-                {{- else }}
-                <img src="{{- site.Params.label.icon | absURL -}}" alt="" aria-label="logo"
-                    height="{{- site.Params.label.iconHeight | default " 30" -}}">
-                {{- end -}}
-                {{- else if hasPrefix site.Params.label.iconSVG "<svg" }} {{ site.Params.label.iconSVG | safeHTML }} {{-
-                    end -}} {{- $label_text -}} {{- if not .IsHome }} <span
-                    style="font-size: 0.8em; font-weight: normal; opacity: 0.7;">
+            <a href="{{ "" | absLangURL }}" accesskey="h" title="{{ $label_text }} (Alt + H)"
+                style="display: flex; align-items: center;">
+                {{- /* Logo Image Integration */}}
+                <img src="/favicon-32x32.png" alt="logo" aria-label="logo" height="32"
+                    style="vertical-align: middle; margin-right: 10px;">
+                {{- $label_text -}}
+                {{- if not .IsHome }} <span style="font-size: 0.8em; font-weight: normal; opacity: 0.7;">
                     (Bharath Srikanth)
-                    </span>
-                    {{- end }}
+                </span>
+                {{- end }}
             </a>
             {{- end }}
             <div class="logo-switches">
@@ -200,6 +243,42 @@
                 {{- end }}
             </div>
         </div>
+
+        {{- /* Social Icons in Header */}}
+        <div class="social-icons"
+            style="margin-left: auto; margin-right: 10px; display: flex; gap: 10px; align-items: center;">
+            {{- range site.Params.socialIcons }}
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer me"
+                title="{{ .name | title | default .name }}" accesskey="{{ substr .name 0 1 }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" height="20" width="20">
+                    {{- if eq .name "github" -}}
+                    <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                    </path>
+                    {{- else if eq .name "orcid" -}}
+                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
+                    <path d="M12 6a1 1 0 1 0-1-1 1 1 0 0 0 1 1zM10 18h2v-8h-2zM15 18h3v-8h-3z"></path>
+                    <path d="M16 10a1.5 1.5 0 0 0 0-3h-1v3z"></path>
+                    <path d="M7 9h2v2H7z"></path>
+                    {{- else if eq .name "email" -}}
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                    {{- else if eq .name "linkedin" -}}
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                    {{- else -}}
+                    {{- /* Generic Fallback or handle others by name/svg */ -}}
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                    {{- end -}}
+                </svg>
+            </a>
+            {{- end }}
+        </div>
+
         {{- $currentPage := . }}
         <ul id="menu">
             {{- range site.Menus.main }}
@@ -226,6 +305,31 @@
                 </a>
             </li>
             {{- end }}
+            <li>
+                <button id="search-button" accesskey="/" title="(Alt + /)" aria-label="Search"
+                    onclick="window.location.href='/search/'"
+                    style="background: none; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; color: var(--primary);">
+                    <span id="search-shortcut"
+                        style="font-size: 12px; color: var(--secondary); opacity: 0.7; margin-right: 8px; font-weight: 500; display: none;">
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </li>
+            <script>
+                (function () {
+                    var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+                    var hint = isMac ? '⌘F' : 'Ctrl+F';
+                    var el = document.getElementById('search-shortcut');
+                    if (el && window.innerWidth > 768) {
+                        el.textContent = hint;
+                        el.style.display = 'inline-block';
+                    }
+                })();
+            </script>
         </ul>
     </nav>
 </header>

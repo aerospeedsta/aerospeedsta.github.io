@@ -1,0 +1,25 @@
+{{ $content := . }}
+{{ $matches := findRE `\[\[\s*([^]]+?)\s*\]\]` $content }}
+{{ range $matches }}
+{{ $raw := . }}
+{{ $stripped := replaceRE `\[\[\s*|\]\]` "" $raw }}
+{{ $tagName := strings.TrimSpace $stripped }}
+{{ $tagSlug := $tagName | urlize }}
+{{ $tagPage := site.GetPage (printf "/tags/%s" $tagSlug) }}
+{{ $replacement := "" }}
+
+{{ if $tagPage }}
+{{ $color := partial "functions/get_tag_color.html" $tagSlug }}
+{{/* Found: Use class and CSS variable for color */}}
+{{ $replacement = printf `<a href="%s" class="wiki-tag wiki-tag-found" style="--tag-color: %s;">%s</a>`
+$tagPage.Permalink $color $tagName }}
+{{ else }}
+{{/* Missing: Standard Gray class */}}
+{{ $replacement = printf `<a href="/tags/%s" class="wiki-tag wiki-tag-missing">%s</a>` $tagSlug $tagName }}
+{{ warnf "WikiLink Tag not found: %s" $tagName }}
+{{ end }}
+
+{{/* Replace all occurrences of this specific raw tag string */}}
+{{ $content = replace $content $raw $replacement }}
+{{ end }}
+{{ return $content }}

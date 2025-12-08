@@ -1,77 +1,77 @@
-{{- define "main" }}
-
+{{ define "main" }}
 <article class="post-single">
+    <!-- Project Header -->
     <header class="post-header">
-        {{ partial "breadcrumbs.html" . }}
-        <h1 class="post-title entry-hint-parent">
-            {{ .Title }}
-        </h1>
-        {{- if .Description }}
-        <div class="post-description">
-            {{ .Description }}
+        <div class="breadcrumbs">
+            <a href="{{ "" | absLangURL }}">Home</a>&nbsp;»&nbsp;<a href="{{ " projects" | absLangURL }}">Projects</a>
         </div>
-        {{- end }}
-        {{- if not (.Param "hideMeta") }}
+        <h1 class="post-title">{{ .Title }}</h1>
         <div class="post-meta">
-            {{- partial "post_meta.html" . -}}
-            {{- partial "edit_post.html" . -}}
+            <span title="{{ .Date.Format " 2006-01-02 15:04:05 -0700 MST" }}">
+                {{ .Date.Format "January 2, 2006" }}
+            </span>&nbsp;·&nbsp;{{ .ReadingTime }} min
         </div>
-        {{- end }}
-        {{- if .Params.abstract }}
-        <div class="post-abstract"
-            style="margin: 20px 0; padding: 20px; background-color: var(--entry); border-left: 4px solid var(--primary); font-style: italic;">
-            <p style="margin: 0; font-weight: bold; font-style: normal; margin-bottom: 10px;">Abstract</p>
-            {{ .Params.abstract }}
-        </div>
-        {{- end }}
     </header>
 
-    {{- if .Content }}
-    <div class="post-content">
-        {{- if not (.Param "disableAnchoredHeadings") }}
-        {{- partial "anchored_headings.html" .Content -}}
-        {{- else }}{{ .Content }}{{ end }}
+    <!-- Tag Pills -->
+    <div class="post-tags" style="margin-bottom: 20px;">
+        {{- partial "tag_pills.html" . }}
     </div>
+
+    <!-- Abstract Box -->
+    {{- if or .Params.abstract .Description }}
+    <div class="abstract-box"
+        style="background: var(--entry); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin: 25px 0;">
+        <h3
+            style="margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px;">
+            Abstract</h3>
+        <div style="color: var(--secondary); font-style: italic; line-height: 1.6;">
+            {{ .Params.abstract | default .Description | markdownify }}
+        </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid var(--border); margin: 40px 0;">
     {{- end }}
+
+    <!-- Cover Image -->
+    {{- $isHidden := .Params.cover.hidden | default false }}
+    {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
+
+    <!-- Content -->
+    <div class="post-content">
+        {{ .Content }}
+    </div>
 
     <footer class="post-footer">
-        {{- if (.Param "ShowPostNavLinks") }}
-        {{- partial "post_nav_links.html" . }}
-        {{- end }}
-        {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
-        {{- partial "share_icons.html" . -}}
-        {{- end }}
     </footer>
-</article>
 
-<!-- Research Log Section -->
-<div class="research-log">
-    <h2 style="margin-top: 40px; margin-bottom: 20px;">Research Updates</h2>
-
-    {{- $projectId := .Params.project_id | default .File.ContentBaseName }}
-    {{- $pages := where site.RegularPages "Type" "posts" }}
-    {{- $projectPosts := where $pages "Params.project_id" $projectId }}
-
-    {{- range $projectPosts }}
-    <article class="post-entry">
-        <header class="entry-header">
-            <h2>
-                {{ .Title }}
-            </h2>
-        </header>
-        {{- if (ne (.Param "hideSummary") true) }}
-        <div class="entry-content">
-            <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+    <!-- Associated Research Updates (Blog Posts) -->
+    {{ $projectId := .Params.project_id }}
+    {{ if $projectId }}
+    {{ $relatedPosts := where site.RegularPages "Params.project_id" $projectId }}
+    {{ $relatedPosts := where $relatedPosts "Permalink" "!=" .Permalink }}
+    {{ if gt (len $relatedPosts) 0 }}
+    <div class="project-updates" style="margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);">
+        <h2 style="margin-bottom: 30px; font-size: 1.8rem;">Research Updates</h2>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            {{ range $relatedPosts }}
+            <article class="post-entry">
+                <header class="entry-header">
+                    <h2>{{ .Title }}</h2>
+                </header>
+                <div class="entry-content">
+                    <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
+                </div>
+                <footer class="entry-footer">
+                    <span title="{{ .Date.Format " 2006-01-02 15:04:05 -0700 MST" }}">
+                        {{ .Date.Format "January 2, 2006" }}
+                    </span>&nbsp;·&nbsp;{{ .ReadingTime }} min
+                </footer>
+                <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
+            </article>
+            {{ end }}
         </div>
-        {{- end }}
-        <footer class="entry-footer">
-            {{- partial "post_meta.html" . -}}
-        </footer>
-        <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
-    </article>
-    {{- else }}
-    <p>No research updates found for this project.</p>
-    {{- end }}
-</div>
-
-{{- end }}
+    </div>
+    {{ end }}
+    {{ end }}
+</article>
+{{ end }}

@@ -1,9 +1,12 @@
 ---
-title: "Interactive 3D Plot Test"
-date: 2023-10-28
-summary: "Testing the Plotly integration with a 3D Torus."
+title: "Plotly Visualization Test"
+date: 2024-12-08
+tags: ["web-dev", "test"]
+summary: "Testing the interactive 3D/2D Plotly integration."
 ---
 
-Here is an interactive 3D plot of a Torus:
+Here is a sample interactive plot rendered from JSON:
 
-{{< plotly json="/data/manifold_01.json" height="600px" >}}
+{{< plotly json="/data/test_plot.json" height="500px" >}}
+
+End of test.

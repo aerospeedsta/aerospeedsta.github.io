@@ -1,0 +1,12 @@
+{{- $tags := .Language.Params.Taxonomies.tag | default "tags" -}}
+{{- if .Param $tags -}}
+
+<div class="post-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
+    {{- range ($.GetTerms $tags) -}}
+    {{- $color := partial "functions/get_tag_color.html" .LinkTitle -}}
+    <a href="{{ .Permalink }}" class="tag-pill" style="--tag-color: {{ $color }};">
+        #{{ .LinkTitle }}
+    </a>
+    {{- end -}}
+</div>
+{{- end -}}

@@ -1,0 +1,34 @@
+{{- $dest := .Destination -}}
+{{- $isRemote := or (hasPrefix $dest "http") (hasPrefix $dest "https") (hasPrefix $dest "//") (hasPrefix $dest
+"mailto:") -}}
+{{- $isAbsolute := hasPrefix $dest "/" -}}
+{{- $isRelativeFile := or (hasPrefix $dest "../") (hasPrefix $dest "./") -}}
+
+{{- if or $isRemote $isAbsolute $isRelativeFile }}
+{{- /* Standard Link rendering */ -}}
+<a href="{{ .Destination | safeURL }}" {{ with .Title}} title="{{ . }}" {{ end }}{{ if $isRemote }} target="_blank"
+    rel="noopener" {{ end }}>{{ .Text | safeHTML }}</a>
+{{- else }}
+{{- /* formatting as a Tag Link (Obsidian style capture) */ -}}
+{{- /* Try to find the tag page */ -}}
+{{- $tagName := $dest | urlize -}}
+{{- $tagPage := site.GetPage (printf "/tags/%s" $tagName) -}}
+
+{{- if $tagPage }}
+{{- /* Tag Found: Get Color */ -}}
+{{- $color := partial "functions/get_tag_color.html" $tagName -}}
+<a href="{{ $tagPage.Permalink }}" class="obsidian-tag"
+    style="background-color: {{ $color }}20; color: {{ $color }}; font-weight: bold; padding: 2px 6px; border-radius: 4px; text-decoration: none;"
+    title="Tag: {{ $tagPage.Title }}">
+    {{- .Text | default $tagPage.Title -}}
+</a>
+{{- else }}
+{{- /* Tag Not Found: Warn and Render Gray */ -}}
+{{- warnf "Obsidian Tag not found: %s (linked as %s)" $tagName $dest -}}
+<a href="{{ (printf " /tags/%s" $tagName) | absURL }}" class="obsidian-tag-missing"
+    style="background-color: rgba(128,128,128,0.15); color: gray; font-weight: bold; padding: 2px 6px; border-radius: 4px; text-decoration: none;"
+    title="Tag not found (auto-generated link)">
+    {{- .Text | default $dest -}}
+</a>
+{{- end }}
+{{- end -}}

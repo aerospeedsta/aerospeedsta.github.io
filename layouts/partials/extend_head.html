@@ -1,108 +1,115 @@
 <style>
-    /* Header Sticky Logic */
-    .header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--theme);
-        border-bottom: 1px solid var(--border);
-        transition: box-shadow 0.3s;
-        /* Ensure opacity so content doesn't show through */
-        opacity: 1 !important;
-    }
-
-    .nav {
-        background: var(--theme);
-    }
-
-    /* Header Pop */
-    .header {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    [data-theme="dark"] .header {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Social Icons Colors */
-    .social-icons a[href*="github.com"] svg {
-        color: #333 !important;
-    }
-
-    [data-theme="dark"] .social-icons a[href*="github.com"] svg {
-        color: #fafafa !important;
-    }
-
-    .social-icons a[href*="orcid.org"] svg {
-        color: #A6CE39 !important;
-    }
-
-    .social-icons a[href*="linkedin.com"] svg {
-        color: #0077B5 !important;
-    }
-
-    .social-icons a[href*="mailto:"] svg {
-        color: #EA4335 !important;
-    }
-
-    /* Hover effects for social icons */
-    .social-icons a svg {
-        transition: transform 0.2s;
-    }
-
-    .social-icons a:hover svg {
-        transform: scale(1.2);
-    }
-
-    /* Menu Styling */
-    #menu li {
-        margin: auto 8px;
-    }
-
-    #menu a {
-        padding: 6px 12px;
-        border-radius: 6px;
+    /* Wiki-style Tag Links [[ tag ]] */
+    a.wiki-tag {
+        text-decoration: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        /* Overrides PaperMod link style */
+        font-weight: 400 !important;
+        padding: 0 4px;
+        border-radius: 4px;
         transition: all 0.2s ease;
     }
 
-    /* Projects Link */
-    #menu a[href*="/projects/"] {
-        font-family: 'Courier New', Courier, monospace !important;
-        background-color: rgba(66, 153, 225, 0.1);
-        color: var(--primary);
+    /* Found Tag (Green/Custom) */
+    a.wiki-tag-found {
+        color: var(--tag-color) !important;
+        background-color: transparent;
     }
 
-    #menu a[href*="/projects/"]:hover {
-        background-color: rgba(66, 153, 225, 0.2);
-        transform: scale(1.05);
-        box-shadow: 0 0 8px rgba(66, 153, 225, 0.2);
+    a.wiki-tag-found:hover {
+        background-color: var(--tag-color);
+        /* Fallback or specific opacity logic needed if hex */
+        /* Since we have Hex colors, we can't easily do alpha without conversion. */
+        /* Alternative: Use filter or specific opacity on background if color is text. */
+        /* Let's invert for highlight: Text White, Bg Color. */
+        color: white !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     }
 
-    [data-theme="dark"] #menu a[href*="/projects/"] {
-        background-color: rgba(99, 179, 237, 0.15);
-        color: #90cdf4;
+    /* Missing Tag (Gray) */
+    a.wiki-tag-missing {
+        color: #888 !important;
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
-    /* Blogs/Posts Link */
-    #menu a[href*="/posts/"] {
-        font-family: Georgia, 'Times New Roman', Times, serif !important;
-        background-color: rgba(237, 137, 54, 0.1);
-        color: var(--primary);
+    a.wiki-tag-missing:hover {
+        background-color: #eee;
+        color: #555 !important;
     }
 
-    #menu a[href*="/posts/"]:hover {
-        background-color: rgba(237, 137, 54, 0.2);
-        transform: scale(1.05);
-        box-shadow: 0 0 8px rgba(237, 137, 54, 0.2);
+    /* Tag Pills (Global Reuse) */
+    .tag-pill {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        line-height: 1.4 !important;
+        /* Force consistent height */
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        border: 1px solid var(--tag-color);
+        color: var(--tag-color) !important;
+        background-color: color-mix(in srgb, var(--tag-color), transparent 90%);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    [data-theme="dark"] #menu a[href*="/posts/"] {
-        background-color: rgba(246, 173, 85, 0.15);
-        color: #fbd38d;
+    .tag-pill sup {
+        font-size: 0.7em;
+        line-height: 0;
+        vertical-align: baseline;
+        position: relative;
+        top: -0.4em;
+        margin-left: 2px;
     }
 
-    #menu a:hover {
-        color: var(--primary);
-        text-shadow: 0 0 1px currentColor;
+    .tag-pill:hover {
+        background-color: color-mix(in srgb, var(--tag-color), transparent 80%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        filter: brightness(1.05);
+    }
+
+    /* Automatic Figure Numbering */
+    body {
+        counter-reset: figure-counter;
+    }
+
+    figure {
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    figcaption {
+        margin-top: 10px;
+        font-style: italic;
+        color: var(--secondary);
+        font-size: 0.9em;
+    }
+
+    figcaption::before {
+        counter-increment: figure-counter;
+        content: "Figure " counter(figure-counter) ": ";
+        font-weight: bold;
+        font-style: normal;
     }
 </style>
+
+{{- if or .Params.math site.Params.math }}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    };
+</script>
+{{- end }}
