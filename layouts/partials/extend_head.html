@@ -1,0 +1,108 @@
+<style>
+    /* Header Sticky Logic */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--theme);
+        border-bottom: 1px solid var(--border);
+        transition: box-shadow 0.3s;
+        /* Ensure opacity so content doesn't show through */
+        opacity: 1 !important;
+    }
+
+    .nav {
+        background: var(--theme);
+    }
+
+    /* Header Pop */
+    .header {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .header {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Social Icons Colors */
+    .social-icons a[href*="github.com"] svg {
+        color: #333 !important;
+    }
+
+    [data-theme="dark"] .social-icons a[href*="github.com"] svg {
+        color: #fafafa !important;
+    }
+
+    .social-icons a[href*="orcid.org"] svg {
+        color: #A6CE39 !important;
+    }
+
+    .social-icons a[href*="linkedin.com"] svg {
+        color: #0077B5 !important;
+    }
+
+    .social-icons a[href*="mailto:"] svg {
+        color: #EA4335 !important;
+    }
+
+    /* Hover effects for social icons */
+    .social-icons a svg {
+        transition: transform 0.2s;
+    }
+
+    .social-icons a:hover svg {
+        transform: scale(1.2);
+    }
+
+    /* Menu Styling */
+    #menu li {
+        margin: auto 8px;
+    }
+
+    #menu a {
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    /* Projects Link */
+    #menu a[href*="/projects/"] {
+        font-family: 'Courier New', Courier, monospace !important;
+        background-color: rgba(66, 153, 225, 0.1);
+        color: var(--primary);
+    }
+
+    #menu a[href*="/projects/"]:hover {
+        background-color: rgba(66, 153, 225, 0.2);
+        transform: scale(1.05);
+        box-shadow: 0 0 8px rgba(66, 153, 225, 0.2);
+    }
+
+    [data-theme="dark"] #menu a[href*="/projects/"] {
+        background-color: rgba(99, 179, 237, 0.15);
+        color: #90cdf4;
+    }
+
+    /* Blogs/Posts Link */
+    #menu a[href*="/posts/"] {
+        font-family: Georgia, 'Times New Roman', Times, serif !important;
+        background-color: rgba(237, 137, 54, 0.1);
+        color: var(--primary);
+    }
+
+    #menu a[href*="/posts/"]:hover {
+        background-color: rgba(237, 137, 54, 0.2);
+        transform: scale(1.05);
+        box-shadow: 0 0 8px rgba(237, 137, 54, 0.2);
+    }
+
+    [data-theme="dark"] #menu a[href*="/posts/"] {
+        background-color: rgba(246, 173, 85, 0.15);
+        color: #fbd38d;
+    }
+
+    #menu a:hover {
+        color: var(--primary);
+        text-shadow: 0 0 1px currentColor;
+    }
+</style>

@@ -1,3 +1,120 @@
+<style>
+    /* Sticky Header */
+    .header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 100 !important;
+        background: var(--theme) !important;
+        border-bottom: 1px solid var(--border);
+        opacity: 1 !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav {
+        background: var(--theme) !important;
+    }
+
+    [data-theme="dark"] .header {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Social Icons Pop - Force Stroke/Fill */
+    .social-icons a[href*="github"] svg {
+        color: #333 !important;
+        stroke: #333 !important;
+    }
+
+    [data-theme="dark"] .social-icons a[href*="github"] svg {
+        color: #fafafa !important;
+        stroke: #fafafa !important;
+    }
+
+    .social-icons a[href*="orcid"] svg {
+        color: #A6CE39 !important;
+        stroke: #A6CE39 !important;
+    }
+
+    .social-icons a[href*="linkedin"] svg {
+        color: #0077B5 !important;
+        stroke: #0077B5 !important;
+    }
+
+    .social-icons a[href*="mailto"] svg {
+        color: #EA4335 !important;
+        stroke: #EA4335 !important;
+    }
+
+    .social-icons a:hover svg {
+        transform: scale(1.2);
+        transition: transform 0.2s;
+    }
+
+    /* Homepage Logic: Projects vs Posts */
+
+    /* Projects Cards - THICK Font, Blue Tint */
+    .post-entry:has(a[href*="/projects/"]) {
+        background-color: rgba(66, 153, 225, 0.1) !important;
+        border: 1px solid rgba(66, 153, 225, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .post-entry:has(a[href*="/projects/"]):hover {
+        background-color: rgba(66, 153, 225, 0.2) !important;
+        box-shadow: 0 8px 20px rgba(66, 153, 225, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .post-entry:has(a[href*="/projects/"]) .entry-header h2 {
+        font-family: inherit !important;
+        /* Revert to default */
+        /* Reverted to standard weight */
+        letter-spacing: -0.5px;
+        color: var(--primary);
+    }
+
+    [data-theme="dark"] .post-entry:has(a[href*="/projects/"]) {
+        background-color: rgba(66, 153, 225, 0.15) !important;
+        border-color: rgba(66, 153, 225, 0.3);
+    }
+
+    /* Blog/Update Cards - THIN Font, Professional Teal Tint */
+    .post-entry:has(a[href*="/posts/"]) {
+        background-color: rgba(56, 178, 172, 0.1) !important;
+        /* Teal */
+        border: 1px solid rgba(56, 178, 172, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .post-entry:has(a[href*="/posts/"]):hover {
+        background-color: rgba(56, 178, 172, 0.2) !important;
+        box-shadow: 0 8px 20px rgba(56, 178, 172, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .post-entry:has(a[href*="/posts/"]) .entry-header h2 {
+        font-family: inherit !important;
+        /* Revert to default */
+        font-weight: 300 !important;
+        /* Thin */
+        color: var(--primary);
+    }
+
+    [data-theme="dark"] .post-entry:has(a[href*="/posts/"]) {
+        background-color: rgba(79, 209, 197, 0.15) !important;
+        border-color: rgba(79, 209, 197, 0.3);
+    }
+
+    /* Ensure entry content text matches theme */
+    .entry-content {
+        color: var(--secondary);
+    }
+</style>
 <header class="header">
     <nav class="nav">
         <div class="logo">

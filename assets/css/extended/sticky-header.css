@@ -1,0 +1,13 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--theme);
+    /* Ensure border doesn't look weird when scrolling */
+    border-bottom: 1px solid var(--border);
+}
+
+/* Ensure nav content is visible against background */
+.nav {
+    background: var(--theme);
+}

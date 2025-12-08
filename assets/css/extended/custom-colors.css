@@ -1,0 +1,102 @@
+/* Social Icons Colors */
+.social-icons a[href*="github.com"] svg {
+    color: #333;
+}
+
+[data-theme="dark"] .social-icons a[href*="github.com"] svg {
+    color: #fafafa;
+}
+
+.social-icons a[href*="orcid.org"] svg {
+    color: #A6CE39;
+}
+
+.social-icons a[href*="linkedin.com"] svg {
+    color: #0077B5;
+}
+
+.social-icons a[href*="mailto:"] svg {
+    color: #EA4335;
+}
+
+/* Hover effects for social icons to make them pop */
+.social-icons a svg {
+    transition: transform 0.2s;
+}
+
+.social-icons a:hover svg {
+    transform: scale(1.2);
+}
+
+/* Header Pop - Subtle Shadow */
+.header {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .header {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Nav Menu Pop */
+#menu a {
+    transition: color 0.2s;
+}
+
+#menu a:hover {
+    color: var(--primary);
+    /* Highlight with primary text color if it's currently secondary, or use a specific color */
+    text-shadow: 0 0 1px currentColor;
+    /* Subtle bolding effect */
+}
+
+/* Distinct Menu Items */
+#menu li {
+    margin: auto 8px;
+    /* Give them space */
+}
+
+#menu a {
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Projects Link Styling */
+#menu a[href*="/projects/"] {
+    font-family: 'Courier New', Courier, monospace;
+    /* Tech/Code feel */
+    background-color: rgba(66, 153, 225, 0.1);
+    /* Subtle Blue */
+    color: var(--primary);
+}
+
+#menu a[href*="/projects/"]:hover {
+    background-color: rgba(66, 153, 225, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(66, 153, 225, 0.2);
+}
+
+[data-theme="dark"] #menu a[href*="/projects/"] {
+    background-color: rgba(99, 179, 237, 0.15);
+    color: #90cdf4;
+}
+
+/* Blogs/Posts Link Styling */
+#menu a[href*="/posts/"] {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    /* Editorial feel */
+    background-color: rgba(237, 137, 54, 0.1);
+    /* Subtle Orange */
+    color: var(--primary);
+}
+
+#menu a[href*="/posts/"]:hover {
+    background-color: rgba(237, 137, 54, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(237, 137, 54, 0.2);
+}
+
+[data-theme="dark"] #menu a[href*="/posts/"] {
+    background-color: rgba(246, 173, 85, 0.15);
+    color: #fbd38d;
+}
