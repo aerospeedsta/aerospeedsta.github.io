@@ -65,6 +65,9 @@
                     <span title="{{ .Date.Format " 2006-01-02 15:04:05 -0700 MST" }}">
                         {{ .Date.Format "January 2, 2006" }}
                     </span>&nbsp;·&nbsp;{{ .ReadingTime }} min
+                    <div style="margin-top: 8px;">
+                        {{- partial "tag_pills.html" . -}}
+                    </div>
                 </footer>
                 <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
             </article>

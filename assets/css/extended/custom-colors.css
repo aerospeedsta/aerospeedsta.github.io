@@ -55,48 +55,63 @@
     /* Give them space */
 }
 
-#menu a {
-    padding: 6px 12px;
-    border-radius: 6px;
+#menu li a {
+    display: inline-block;
+    padding: 2px 10px !important;
+    border-radius: 4px;
+    line-height: 1.2;
     transition: all 0.2s ease;
 }
 
-/* Projects Link Styling */
-#menu a[href*="/projects/"] {
-    font-family: 'Courier New', Courier, monospace;
-    /* Tech/Code feel */
-    background-color: rgba(66, 153, 225, 0.1);
-    /* Subtle Blue */
+/* Header Link Hover Boost */
+#menu a:hover {
+    background-color: rgba(128, 128, 128, 0.1);
     color: var(--primary);
+    text-shadow: none;
 }
 
-#menu a[href*="/projects/"]:hover {
-    background-color: rgba(66, 153, 225, 0.2);
-    transform: scale(1.05);
-    box-shadow: 0 0 8px rgba(66, 153, 225, 0.2);
+/* Tag Pills Styling */
+.tag-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    /* Slight height increase, comfy width */
+    margin: 2px 4px 2px 0;
+    color: var(--tag-color, var(--primary));
+    border: 1px solid var(--tag-color, var(--border));
+    border-radius: 14px;
+    font-size: 13px;
+    transition: all 0.2s;
+    background: transparent;
+    text-decoration: none !important;
+    position: relative;
+    z-index: 2;
 }
 
-[data-theme="dark"] #menu a[href*="/projects/"] {
-    background-color: rgba(99, 179, 237, 0.15);
-    color: #90cdf4;
+.tag-pill:hover {
+    background-color: var(--tag-color, var(--primary)) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Blogs/Posts Link Styling */
-#menu a[href*="/posts/"] {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    /* Editorial feel */
-    background-color: rgba(237, 137, 54, 0.1);
-    /* Subtle Orange */
+/* Homepage Section Headers Links */
+.section-title-link {
+    text-decoration: none !important;
+    display: inline-block;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.section-title-link h2 {
     color: var(--primary);
+    transition: color 0.2s;
 }
 
-#menu a[href*="/posts/"]:hover {
-    background-color: rgba(237, 137, 54, 0.2);
-    transform: scale(1.05);
-    box-shadow: 0 0 8px rgba(237, 137, 54, 0.2);
+.section-title-link:hover h2 {
+    color: var(--secondary);
+    text-decoration: underline;
 }
 
-[data-theme="dark"] #menu a[href*="/posts/"] {
-    background-color: rgba(246, 173, 85, 0.15);
-    color: #fbd38d;
+.section-title-link:hover {
+    transform: translateX(5px);
 }

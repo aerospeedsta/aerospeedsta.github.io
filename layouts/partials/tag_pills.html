@@ -2,11 +2,24 @@
 {{- if .Param $tags -}}
 
 <div class="post-tags" style="display: flex; flex-wrap: wrap; gap: 10px;">
-    {{- range ($.GetTerms $tags) -}}
+    {{- $term_objects := $.GetTerms $tags -}}
+    {{- if $term_objects -}}
+    {{- range $term_objects -}}
     {{- $color := partial "functions/get_tag_color.html" .LinkTitle -}}
     <a href="{{ .Permalink }}" class="tag-pill" style="--tag-color: {{ $color }};">
         #{{ .LinkTitle }}
     </a>
+    {{- end -}}
+    {{- else -}}
+    {{- /* Fallback for when GetTerms fails (e.g. content type issues) */ -}}
+    {{- range ($.Param $tags) -}}
+    {{- $tagName := . -}}
+    {{- $color := partial "functions/get_tag_color.html" $tagName -}}
+    <a href="{{ printf " /%s/%s" $tags ($tagName | urlize) | absLangURL }}" class="tag-pill"
+        style="--tag-color: {{ $color }};">
+        #{{ $tagName }}
+    </a>
+    {{- end -}}
     {{- end -}}
 </div>
 {{- end -}}

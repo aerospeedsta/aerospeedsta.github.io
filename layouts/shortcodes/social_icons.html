@@ -1,0 +1,81 @@
+<div class="social-icons">
+    {{- range site.Params.socialIcons }}
+    <a href="{{ .url }}" target="_blank" rel="noopener noreferrer me" title="{{ .name | title | default .name }}"
+        accesskey="{{ substr .name 0 1 }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" height="24" width="24">
+            {{- if eq .name "github" -}}
+            <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+            </path>
+            {{- else if eq .name "orcid" -}}
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
+            <path d="M12 6a1 1 0 1 0-1-1 1 1 0 0 0 1 1zM10 18h2v-8h-2zM15 18h3v-8h-3z"></path>
+            <path d="M16 10a1.5 1.5 0 0 0 0-3h-1v3z"></path>
+            <path d="M7 9h2v2H7z"></path>
+            {{- else if eq .name "email" -}}
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+            {{- else if eq .name "linkedin" -}}
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+            {{- else -}}
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+            {{- end -}}
+        </svg>
+    </a>
+    {{- end }}
+</div>
+
+<style>
+    .social-icons {
+        display: flex;
+        justify-content: flex-start;
+        /* Changed from center to flex-start */
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .social-icons a {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.2s;
+    }
+
+    .social-icons a:hover {
+        transform: scale(1.1);
+    }
+
+    /* Reuse the color logic from header or define it here if needed. 
+       Assuming global theme CSS handles SVG stroke/fill or we inline it like before.
+       Let's add the specific colors back just to be safe.
+    */
+    .social-icons a[href*="github"] svg {
+        color: #333;
+        stroke: #333;
+    }
+
+    [data-theme="dark"] .social-icons a[href*="github"] svg {
+        color: #fafafa;
+        stroke: #fafafa;
+    }
+
+    .social-icons a[href*="orcid"] svg {
+        color: #A6CE39;
+        stroke: #A6CE39;
+    }
+
+    .social-icons a[href*="linkedin"] svg {
+        color: #0077B5;
+        stroke: #0077B5;
+    }
+
+    .social-icons a[href*="mailto"] svg {
+        color: #EA4335;
+        stroke: #EA4335;
+    }
+</style>

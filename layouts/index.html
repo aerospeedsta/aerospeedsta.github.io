@@ -29,7 +29,10 @@
 
 <!-- Active Research (Projects) Section -->
 <div class="home-section" style="margin-top: 50px;">
-    <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Active Research</h2>
+    <a href="/projects/" class="section-title-link">
+        <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Active Research
+        </h2>
+    </a>
 
     {{- $projects := where site.RegularPages "Type" "projects" }}
     {{- range $projects }}
@@ -53,7 +56,10 @@
 
 <!-- Recent Updates Section -->
 <div class="home-section" style="margin-top: 50px;">
-    <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Recent Updates</h2>
+    <a href="/posts/" class="section-title-link">
+        <h2 style="margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Recent Updates
+        </h2>
+    </a>
 
     {{- $posts := where site.RegularPages "Type" "posts" }}
     {{- range first 3 $posts }}
@@ -68,6 +74,10 @@
             <span title='{{ .Date.Format "2006-01-02 15:04:05 -0700 MST" }}'>
                 {{- .Date.Format "January 2, 2006" -}}
             </span>
+            {{- /* Add tags with links */ -}}
+            <div style="margin-top: 8px;">
+                {{- partial "tag_pills.html" . -}}
+            </div>
         </div>
         <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
     </article>

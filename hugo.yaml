@@ -75,3 +75,11 @@ outputs:
   home:
     - HTML
     - JSON
+
+
+menu:
+  main:
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 30
